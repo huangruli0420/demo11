@@ -1,5 +1,6 @@
 package com.example.demo11;
 
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -286,8 +287,62 @@ public class ClassTest20241014 {
 		}
 	}
 	
+//	20241120 程式異常處理
+	@Test
+	public void test() {
+//		List<String> list = null;
+//		for(String str :list) {
+//			System.out.println(str);
+//		}
+		
+		String str = null;
+		getLength(str);
+	}
 	
+	public void getLength(String str) {
+		//try裡面要放的是預期會發生錯誤的程式碼，基本上不會去改Exception，因為是所有Exception的父類別，若是他之下的兄弟類別則互相抓不到
+		try {
+			System.out.println(str.length());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			System.out.println("AAA");
+		}
+		//=============================
+		// finally區塊裡面無論如何都會執行
+		try {
+			System.out.println(str.length());
+		} catch (IndexOutOfBoundsException e) {
+			System.out.println(e.getMessage());
+		} finally {
+		System.out.println("BBB");
+		}
+	}
 	
+	@Test
+	public void test2() {
+		Scanner scan = new Scanner(System.in);
+		try  {
+			String input = scan.next();
+		} catch(Exception e) {
+			
+		} finally {
+			//scan 屬於 I/O類，new出來後系統會建議在不使用時(程式碼最後)將其關閉(close)以避免資源的浪費
+			// 若沒有關閉不會報錯，頂多就是浪費資源
+			scan.close();
+		}
+		//=========================================================================================
+		// try-with-resources:
+		// 1. 將 new 出來的 I/O 類寫在 try 後面的小括號中
+		// 2.程式碼離開 try-catch 的區塊後會自動執行 close將資源關閉
+		// 3.小括號中若有多個 I/O 類時，用分號區隔
+		try (Scanner scanA = new Scanner(System.in);
+				Scanner scanB = new Scanner(System.in);) {
+			String input = scanA.next();
+		} catch (Exception e) {
+			
+		} 
+	}
 	
 }
 
